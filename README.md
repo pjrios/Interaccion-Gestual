@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, posiblemente utilizando un Arduino, a través de gestos de mano detectados por una cámara web. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o remota (con MQTT), facilita la interacción entre el usuario y los dispositivos.
+Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o remota (con MQTT), facilita la interacción entre el usuario y los dispositivos.
 
 ## Librerias
 
@@ -18,7 +18,7 @@ Para este projecto utilizamos las siguientes librerias:
 
 3. **`math`**:
    - Descripción (math): El módulo `math` es una biblioteca estándar de Python que proporciona funciones matemáticas básicas.
-   - Utilidad (math): Se utiliza para realizar operaciones matemáticas avanzadas, como funciones trigonométricas, logaritmos, etc.
+   - Utilidad (math): Se utiliza para realizar operaciones matemáticas, como funciones trigonométricas, logaritmos, etc.
 4. **`time`**:
    - Descripción (time): El módulo `time` es una biblioteca estándar de Python que se utiliza para trabajar con operaciones relacionadas con el tiempo.
    - Utilidad (time): Se utiliza para medir intervalos de tiempo, programar tareas, manejar fechas y horas, y otras operaciones relacionadas con el tiempo.
@@ -66,8 +66,8 @@ con open('C:\\Usuario\\ubicacion\\del\\archivo\\codigo-reconocimiento-gestos-man
     nombres_clase = archivo.read().split('\n')
 ```
 
-- `nombres_clase` contendrá una lista de nombres de clase que el modelo puede reconocer.
-- Los nombres de clase se leen desde la ruta de archivo especificada, que parece ser `'C:\\Users\\pjrio\\proyectos\\codigo-reconocimiento-gestos-mano\\gestos.names'`.
+- `nombres_clase` contiene una lista de nombres de clase que el modelo puede reconocer.
+- Los nombres de clase se leen desde la ruta de archivo especificada, en mi caso ser `'C:\\Users\\pjrio\\proyectos\\codigo-reconocimiento-gestos-mano\\gestos.names'`.
 
 ## Inicialización de Mediapipe
 
@@ -115,9 +115,6 @@ arduino = serial.Serial('COM10', 9600)
 - `'COM10'`: El identificador del puerto para la conexión serial.
 - `9600`: La velocidad de baudios (velocidad de transmisión de datos) para la comunicación serial.
 
-Este fragmento de código parece configurar el entorno y los recursos necesarios para el reconocimiento de gestos de mano utilizando un modelo de CNN preentrenado, Mediapipe para el seguimiento de manos y una conexión serial para la interacción con dispositivos externos.
-
-
 ### Envío de un Comando a través de Serial
 
 En esta sección, se envía un comando a través de una conexión serial a un dispositivo externo (probablemente Arduino):
@@ -157,7 +154,7 @@ with mp_manos.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 
 ## Limpiando el búfer serial
 
-En esta sección, se asegura de que no queden datos antiguos en el búfer de la conexión serial:
+En esta sección, nos aseguramos de que no queden datos antiguos en el búfer de la conexión serial:
 
 ```python
 arduino.flush()
@@ -186,6 +183,7 @@ image.flags.writeable = False
 ```
 
 - `image.flags.writeable = False`: Configura la imagen como no escribible.
+- `image.flags.writeable = True`: Configura la imagen nuevamente como escribible.
 
 ## Detección de manos
 
@@ -197,15 +195,6 @@ results = hands.process(image)
 
 - `hands.process(image)`: Procesa la imagen para detectar y rastrear las manos.
 
-## Restauración de la bandera de escritura
-
-Después de la detección de manos, se restaura la bandera de escritura para permitir modificaciones en la imagen:
-
-```python
-image.flags.writeable = True
-```
-
-- `image.flags.writeable = True`: Configura la imagen nuevamente como escribible.
 
 ## Conversión de formato de color
 
@@ -235,7 +224,7 @@ if results.multi_hand_landmarks:
 
 ## Control de Arduino según el gesto detectado
 
-En esta parte, se controla un dispositivo externo (probablemente Arduino) en función del gesto detectado:
+En esta parte, se controla un dispositivo externo (un Arduino) en función del gesto detectado:
 
 ```python
 if gesture == 'thumbs down':
