@@ -44,9 +44,9 @@ Para este projecto utilizamos las siguientes librerias:
    - Utilidad: Se utiliza para establecer conexiones y enviar mensajes entre dispositivos a través del protocolo MQTT, lo que es esencial en aplicaciones de IoT para transmitir datos de manera eficiente y confiable.
 
 
-## Carga del Modelo CNN
+## Cargar el Modelo de Red Neuronal Convolucional (CNN)
 
-Para el reconocimiento de gestos, se puden utilizar modelos publicos, entrenar uno nuevo, o modificar modelos existentes. Pueden encontrar modelos en la [pagina official de Keras](https://tfhub.dev/). En este caso utilizare un modelo publico de Red Neuronal Convolucional (CNN) para el reconocimiento de gestos de mano:
+Para el reconocimiento de gestos, se puden utilizar modelos publicos, entrenar uno nuevo, o modificar modelos existentes. Pueden encontrar modelos en la [pagina official de Keras](https://tfhub.dev/). En este caso utilizare un modelo publico de Red Neuronal Convolucional ( o Convolutional Neural Network, CNN) para el reconocimiento de gestos de mano:
 
 ```python
 # Recuerden cambiar la ubicacion de ejemplo.
@@ -56,7 +56,7 @@ modelo = load_model('C:\\Usuario\\ubicacion\\del\\archivo\\codigo-reconocimiento
 - `load_model`: Una función de `tensorflow.keras.models` para cargar un modelo de red neuronal preentrenado.
 - El modelo se carga desde la ruta especificada, en mi caso: `'C:\\Users\\pjrio\\proyectos\\codigo-reconocimiento-gestos-mano\\mp_gesto_mano'`.
 
-## Carga de Nombres de Clase
+## Cargar los Nombres de la Clase
 
 Los nombres de clase para el modelo de reconocimiento de gestos se cargan en esta sección:
 
@@ -83,7 +83,7 @@ mp_manos = mp.solutions.hands
 
 ## Inicialización de la Cámara
 
-La cámara web se inicializa para capturar video:
+La cámara se inicializa para capturar video:
 
 ```python
 cap = cv2.VideoCapture(0)
@@ -103,7 +103,7 @@ ret = 'ninguno'
 - `enviar_comando`: Una bandera que indica si debe enviarse un comando.
 - `ret`: Una variable para almacenar una respuesta.
 
-## Iniciando la Conexión Serial
+## Conexión Serial
 
 Se establece una conexión serial con un dispositivo (probablemente Arduino) en esta sección:
 
@@ -118,7 +118,7 @@ arduino = serial.Serial('COM10', 9600)
 Este fragmento de código parece configurar el entorno y los recursos necesarios para el reconocimiento de gestos de mano utilizando un modelo de CNN preentrenado, Mediapipe para el seguimiento de manos y una conexión serial para la interacción con dispositivos externos.
 
 
-## Envío de un Comando a través de Serial
+### Envío de un Comando a través de Serial
 
 En esta sección, se envía un comando a través de una conexión serial a un dispositivo externo (probablemente Arduino):
 
@@ -140,7 +140,7 @@ print(ret)
 En esta sección del código, se ejecuta el envío de un comando a través de una conexión serial a un dispositivo externo, probablemente Arduino. El código envía el comando, espera un breve período y luego lee y muestra la respuesta recibida del dispositivo externo.
 
 
-# Iniciando bucle de captura de video
+# Bucle de captura de video
 
 En esta sección, se inicia un bucle para capturar video desde la cámara y procesar los frames para el reconocimiento de gestos de mano utilizando la biblioteca `mediapipe` y OpenCV:
 
