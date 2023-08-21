@@ -1,4 +1,4 @@
-# Interacción Gestual con Arduino: Control y Comunicación
+# Interacción Gestual con Arduino y Rock 3a: Control y Comunicación
 
 ## Descripción General
 
