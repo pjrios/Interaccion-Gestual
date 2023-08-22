@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o remota (con MQTT), facilita la interacción entre el usuario y los dispositivos.
+Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial, facilita la interacción entre el usuario y los dispositivos.
 
 ## Librerias
 
