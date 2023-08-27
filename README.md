@@ -1,3 +1,6 @@
+# Antes de comenzar
+Este projecto esta escrito en Python y Arduino. En caso que necesistes informacion sobre la instalacion y uso de python puedes visitar este repositorio: [Python 101](https://github.com/pjrios/Python-101/tree/main)
+
 # Interacción Gestual con Arduino: Control y Comunicación
 
 ## Descripción General
