@@ -182,25 +182,7 @@ if results.multi_hand_landmarks:
 - `results.multi_hand_landmarks`: Verifica si se detectaron manos en el frame.
 - `hand_landmarks`: Puntos clave (landmarks) detectados en la mano.
 
-## Control de Arduino según el gesto detectado
 
-En esta parte, se controla un dispositivo externo (un Arduino) en función del gesto detectado:
-
-```python
-if gesture == 'thumbs down':
-    # Enviar comando para detener
-    # Manejar respuestas desde el dispositivo externo
-elif gesture == 'thumbs up':
-    # Enviar comando para avanzar
-    # Manejar respuestas desde el dispositivo externo
-elif send_cmd == True and finger_count == 10:
-    # Enviar comando para encender luces
-    # Manejar respuestas desde el dispositivo externo
-```
-
-- `gesto`: El gesto detectado.
-- `enviar_comando`: Una bandera que indica si se debe enviar un comando.
-- `finger_count`: Número de dedos abiertos detectados.
 
 ## Mostrar información en la imagen
 
