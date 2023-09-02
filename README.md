@@ -6,6 +6,9 @@ Este projecto esta escrito en Python y Arduino. En caso que necesistes informaci
 ## Descripción General
 
 Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino y un Rock3a, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o MQTT, facilita la interacción entre el usuario y los dispositivos.
+Table of contents:
+
+[[_TOC_]]
 
 ## Librerias
 
