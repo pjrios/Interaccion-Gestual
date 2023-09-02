@@ -40,3 +40,24 @@ arduino.flush()
 ```
 
 - `arduino.flush()`: Limpia el búfer serial de la conexión con el dispositivo externo.
+
+## Control de Arduino según el gesto detectado
+
+En esta parte, se controla un dispositivo externo (un Arduino) en función del gesto detectado:
+
+```python
+if gesture == 'thumbs down':
+    # Enviar comando para detener
+    # Manejar respuestas desde el dispositivo externo
+elif gesture == 'thumbs up':
+    # Enviar comando para avanzar
+    # Manejar respuestas desde el dispositivo externo
+elif send_cmd == True and finger_count == 10:
+    # Enviar comando para encender luces
+    # Manejar respuestas desde el dispositivo externo
+```
+
+- `gesto`: El gesto detectado.
+- `enviar_comando`: Una bandera que indica si se debe enviar un comando.
+- `finger_count`: Número de dedos abiertos detectados.
+
