@@ -31,3 +31,12 @@ print(ret)
 
 En esta sección del código, se ejecuta el envío de un comando a través de una conexión serial a un dispositivo externo, probablemente Arduino. El código envía el comando, espera un breve período y luego lee y muestra la respuesta recibida del dispositivo externo.
 
+## Limpiando el búfer serial
+
+En esta sección, nos aseguramos de que no queden datos antiguos en el búfer de la conexión serial:
+
+```python
+arduino.flush()
+```
+
+- `arduino.flush()`: Limpia el búfer serial de la conexión con el dispositivo externo.
