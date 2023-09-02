@@ -121,15 +121,6 @@ with mp_manos.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 - `ret`: Variable booleana que indica si el frame se capturó correctamente.
 - `frame`: El frame de video actual.
 
-## Limpiando el búfer serial
-
-En esta sección, nos aseguramos de que no queden datos antiguos en el búfer de la conexión serial:
-
-```python
-arduino.flush()
-```
-
-- `arduino.flush()`: Limpia el búfer serial de la conexión con el dispositivo externo.
 
 ## Conversión de formato de color y volteo horizontal
 
