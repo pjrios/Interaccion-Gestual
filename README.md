@@ -20,7 +20,6 @@ Table of contents:
   - [Cargar los Nombres de la Clase](#cargar-los-nombres-de-la-clase)
   - [Inicialización de Mediapipe](#inicializaci%C3%B3n-de-mediapipe)
   - [Inicialización de la Cámara](#inicializaci%C3%B3n-de-la-c%C3%A1mara)
-  - [Variables](#variables)
   - [Bucle de captura de video](#bucle-de-captura-de-video)
   - [Conversión de formato de color y volteo horizontal](#conversi%C3%B3n-de-formato-de-color-y-volteo-horizontal)
   - [Configuración de la bandera de escritura](#configuraci%C3%B3n-de-la-bandera-de-escritura)
