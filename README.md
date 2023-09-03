@@ -1,31 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Antes de comenzar](#antes-de-comenzar)
-- [Interacción Gestual con Arduino y Rock3a: Control y Comunicación](#interacci%C3%B3n-gestual-con-arduino-y-rock3a-control-y-comunicaci%C3%B3n)
-  - [Descripción General](#descripci%C3%B3n-general)
-  - [Librerias](#librerias)
-  - [Cargar el Modelo de Red Neuronal Convolucional (CNN)](#cargar-el-modelo-de-red-neuronal-convolucional-cnn)
-  - [Cargar los Nombres de la Clase](#cargar-los-nombres-de-la-clase)
-  - [Inicialización de Mediapipe](#inicializaci%C3%B3n-de-mediapipe)
-  - [Inicialización de la Cámara](#inicializaci%C3%B3n-de-la-c%C3%A1mara)
-  - [Variables](#variables)
-  - [Conexión Serial](#conexi%C3%B3n-serial)
-    - [Envío de un Comando a través de Serial](#env%C3%ADo-de-un-comando-a-trav%C3%A9s-de-serial)
-- [Bucle de captura de video](#bucle-de-captura-de-video)
-  - [Limpiando el búfer serial](#limpiando-el-b%C3%BAfer-serial)
-  - [Conversión de formato de color y volteo horizontal](#conversi%C3%B3n-de-formato-de-color-y-volteo-horizontal)
-  - [Configuración de la bandera de escritura](#configuraci%C3%B3n-de-la-bandera-de-escritura)
-  - [Detección de manos](#detecci%C3%B3n-de-manos)
-  - [Conversión de formato de color](#conversi%C3%B3n-de-formato-de-color)
-  - [Conteo de dedos y detección de gestos](#conteo-de-dedos-y-detecci%C3%B3n-de-gestos)
-  - [Control de Arduino según el gesto detectado](#control-de-arduino-seg%C3%BAn-el-gesto-detectado)
-  - [Mostrar información en la imagen](#mostrar-informaci%C3%B3n-en-la-imagen)
-  - [Mostrar el frame de salida](#mostrar-el-frame-de-salida)
-  - [Romper el bucle y liberar recursos](#romper-el-bucle-y-liberar-recursos)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Antes de comenzar
 Este projecto esta escrito en Python y Arduino. En caso que necesistes informacion sobre la instalacion y uso de python puedes visitar este repositorio: [Python 101](https://github.com/pjrios/Python-101/tree/main)
@@ -37,7 +10,29 @@ Este projecto esta escrito en Python y Arduino. En caso que necesistes informaci
 Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino y un Rock3a, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o MQTT, facilita la interacción entre el usuario y los dispositivos.
 Table of contents:
 
-[[_TOC_]]
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Interacción Gestual con Arduino y Rock3a: Control y Comunicación](#interacci%C3%B3n-gestual-con-arduino-y-rock3a-control-y-comunicaci%C3%B3n)
+  - [Librerias](#librerias)
+  - [Cargar el Modelo de Red Neuronal Convolucional (CNN)](#cargar-el-modelo-de-red-neuronal-convolucional-cnn)
+  - [Cargar los Nombres de la Clase](#cargar-los-nombres-de-la-clase)
+  - [Inicialización de Mediapipe](#inicializaci%C3%B3n-de-mediapipe)
+  - [Inicialización de la Cámara](#inicializaci%C3%B3n-de-la-c%C3%A1mara)
+  - [Variables](#variables)
+  - [Bucle de captura de video](#bucle-de-captura-de-video)
+  - [Conversión de formato de color y volteo horizontal](#conversi%C3%B3n-de-formato-de-color-y-volteo-horizontal)
+  - [Configuración de la bandera de escritura](#configuraci%C3%B3n-de-la-bandera-de-escritura)
+  - [Detección de manos](#detecci%C3%B3n-de-manos)
+  - [Conversión de formato de color](#conversi%C3%B3n-de-formato-de-color)
+  - [Conteo de dedos y detección de gestos](#conteo-de-dedos-y-detecci%C3%B3n-de-gestos)
+  - [Control de Arduino según el gesto detectado](#control-de-arduino-seg%C3%BAn-el-gesto-detectado)
+  - [Mostrar información en la imagen](#mostrar-informaci%C3%B3n-en-la-imagen)
+  - [Mostrar el frame de salida](#mostrar-el-frame-de-salida)
+  - [Romper el bucle y liberar recursos](#romper-el-bucle-y-liberar-recursos)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Librerias
 
