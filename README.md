@@ -27,7 +27,6 @@ Table of contents:
   - [Detección de manos](#detecci%C3%B3n-de-manos)
   - [Conversión de formato de color](#conversi%C3%B3n-de-formato-de-color)
   - [Conteo de dedos y detección de gestos](#conteo-de-dedos-y-detecci%C3%B3n-de-gestos)
-  - [Control de Arduino según el gesto detectado](#control-de-arduino-seg%C3%BAn-el-gesto-detectado)
   - [Mostrar información en la imagen](#mostrar-informaci%C3%B3n-en-la-imagen)
   - [Mostrar el frame de salida](#mostrar-el-frame-de-salida)
   - [Romper el bucle y liberar recursos](#romper-el-bucle-y-liberar-recursos)
