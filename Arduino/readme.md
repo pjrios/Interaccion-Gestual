@@ -1,4 +1,4 @@
-## Conexión Serial
+# Conexión Serial con Arduino
 
 Se establece una conexión serial con un dispositivo (probablemente Arduino) en esta sección:
 
@@ -10,7 +10,7 @@ arduino = serial.Serial('COM10', 9600)
 - `'COM10'`: El identificador del puerto para la conexión serial.
 - `9600`: La velocidad de baudios (velocidad de transmisión de datos) para la comunicación serial.
 
-### Envío de un Comando a través de Serial
+## Envío de un Comando a través de Serial
 
 En esta sección, se envía un comando a través de una conexión serial a un dispositivo externo (probablemente Arduino):
 
