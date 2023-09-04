@@ -35,6 +35,9 @@ Este projecto esta escrito en Python y Arduino. En caso que necesistes informaci
 ## Descripción General
 
 Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino y un Rock3a, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o MQTT, facilita la interacción entre el usuario y los dispositivos.
+Table of contents:
+
+[[_TOC_]]
 
 ## Librerias
 
@@ -135,40 +138,6 @@ ret = 'ninguno'
 - `enviar_comando`: Una bandera que indica si debe enviarse un comando.
 - `ret`: Una variable para almacenar una respuesta.
 
-## Conexión Serial
-
-Se establece una conexión serial con un dispositivo (probablemente Arduino) en esta sección:
-
-```python
-arduino = serial.Serial('COM10', 9600)
-```
-
-- `arduino`: Una instancia de `serial.Serial` para establecer comunicación serial.
-- `'COM10'`: El identificador del puerto para la conexión serial.
-- `9600`: La velocidad de baudios (velocidad de transmisión de datos) para la comunicación serial.
-
-### Envío de un Comando a través de Serial
-
-En esta sección, se envía un comando a través de una conexión serial a un dispositivo externo (probablemente Arduino):
-
-```python
-comando = 'iniciar'
-arduino.write(bytes(comando, 'utf-8'))
-time.sleep(0.05)
-ret = arduino.readline()
-print(ret)
-```
-
-- `comando`: Una cadena que contiene el comando que se va a enviar.
-- `arduino.write(bytes(comando, 'utf-8'))`: Envía el comando como bytes a través de la conexión serial establecida.
-- `time.sleep(0.05)`: Pausa la ejecución durante 0.05 segundos para asegurar que el comando se transmita correctamente.
-- `ret`: Almacena la respuesta recibida desde el dispositivo externo.
-- `arduino.readline()`: Lee una línea (respuesta) del dispositivo externo a través de la conexión serial.
-- `print(ret)`: Muestra la respuesta recibida.
-
-En esta sección del código, se ejecuta el envío de un comando a través de una conexión serial a un dispositivo externo, probablemente Arduino. El código envía el comando, espera un breve período y luego lee y muestra la respuesta recibida del dispositivo externo.
-
-
 # Bucle de captura de video
 
 En esta sección, se inicia un bucle para capturar video desde la cámara y procesar los frames para el reconocimiento de gestos de mano utilizando la biblioteca `mediapipe` y OpenCV:
@@ -184,15 +153,6 @@ with mp_manos.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 - `ret`: Variable booleana que indica si el frame se capturó correctamente.
 - `frame`: El frame de video actual.
 
-## Limpiando el búfer serial
-
-En esta sección, nos aseguramos de que no queden datos antiguos en el búfer de la conexión serial:
-
-```python
-arduino.flush()
-```
-
-- `arduino.flush()`: Limpia el búfer serial de la conexión con el dispositivo externo.
 
 ## Conversión de formato de color y volteo horizontal
 
@@ -254,25 +214,7 @@ if results.multi_hand_landmarks:
 - `results.multi_hand_landmarks`: Verifica si se detectaron manos en el frame.
 - `hand_landmarks`: Puntos clave (landmarks) detectados en la mano.
 
-## Control de Arduino según el gesto detectado
 
-En esta parte, se controla un dispositivo externo (un Arduino) en función del gesto detectado:
-
-```python
-if gesture == 'thumbs down':
-    # Enviar comando para detener
-    # Manejar respuestas desde el dispositivo externo
-elif gesture == 'thumbs up':
-    # Enviar comando para avanzar
-    # Manejar respuestas desde el dispositivo externo
-elif send_cmd == True and finger_count == 10:
-    # Enviar comando para encender luces
-    # Manejar respuestas desde el dispositivo externo
-```
-
-- `gesto`: El gesto detectado.
-- `enviar_comando`: Una bandera que indica si se debe enviar un comando.
-- `finger_count`: Número de dedos abiertos detectados.
 
 ## Mostrar información en la imagen
 
