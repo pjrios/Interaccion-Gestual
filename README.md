@@ -3,184 +3,255 @@
 # Antes de comenzar
 Este projecto esta escrito en Python y Arduino. En caso que necesistes informacion sobre la instalacion y uso de python puedes visitar este repositorio: [Python 101](https://github.com/pjrios/Python-101/tree/main)
 
-## Descripción General del Script
-Este script en Python proporciona una solución para la supervisión de datos de sensores y la interacción con el modelo de lenguaje GPT-3 de OpenAI a través de MQTT. A continuación, se presenta un resumen de las principales funciones y características del script:
+# Interacción Gestual con Arduino y Rock3a: Control y Comunicación
 
-```markdown
-## Importando Dependencias
+## Descripción General
+
+Este proyecto se enfoca en desarrollar un sistema interactivo que permite a los usuarios controlar dispositivos externos, utilizando un Arduino y un Rock3a, a través de gestos de mano detectados por una cámara. La combinación de tecnologías como redes neuronales convolucionales (CNN), la biblioteca Mediapipe para el detección y análisis de manos, y la comunicación serial o MQTT, facilita la interacción entre el usuario y los dispositivos.
+Table of contents:
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Interacción Gestual con Arduino y Rock3a: Control y Comunicación](#interacci%C3%B3n-gestual-con-arduino-y-rock3a-control-y-comunicaci%C3%B3n)
+  - [Librerias](#librerias)
+  - [Cargar el Modelo de Red Neuronal Convolucional (CNN)](#cargar-el-modelo-de-red-neuronal-convolucional-cnn)
+  - [Cargar los Nombres de la Clase](#cargar-los-nombres-de-la-clase)
+  - [Inicialización de Mediapipe](#inicializaci%C3%B3n-de-mediapipe)
+  - [Inicialización de la Cámara](#inicializaci%C3%B3n-de-la-c%C3%A1mara)
+  - [Bucle de captura de video](#bucle-de-captura-de-video)
+  - [Conversión de formato de color y volteo horizontal](#conversi%C3%B3n-de-formato-de-color-y-volteo-horizontal)
+  - [Configuración de la bandera de escritura](#configuraci%C3%B3n-de-la-bandera-de-escritura)
+  - [Detección de manos](#detecci%C3%B3n-de-manos)
+  - [Conversión de formato de color](#conversi%C3%B3n-de-formato-de-color)
+  - [Conteo de dedos y detección de gestos](#conteo-de-dedos-y-detecci%C3%B3n-de-gestos)
+  - [Mostrar información en la imagen](#mostrar-informaci%C3%B3n-en-la-imagen)
+  - [Mostrar el frame de salida](#mostrar-el-frame-de-salida)
+  - [Romper el bucle y liberar recursos](#romper-el-bucle-y-liberar-recursos)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Librerias
+
+Para este projecto utilizamos las siguientes librerias:
+
+1. **`cv2 (OpenCV)`**:
+   - Descripción: OpenCV (Open Source Computer Vision Library) es una biblioteca de visión por computadora de código abierto que proporciona una amplia gama de funciones para el procesamiento de imágenes y videos en tiempo real.
+   - Utilidad: Se utiliza para tareas como manipulación de imágenes, detección y seguimiento de objetos, reconocimiento facial, calibración de cámaras y más en aplicaciones de visión por computadora.
+
+2. **`numpy (np)`**:
+   - Descripción: NumPy es una biblioteca fundamental para la computación científica en Python. Proporciona un soporte eficiente para matrices multidimensionales y operaciones matemáticas en ellas.
+   - Utilidad: Se utiliza para realizar cálculos numéricos y matriciales de manera rápida y eficiente, lo que es esencial en muchas aplicaciones científicas y de análisis de datos.
+
+3. **`math`**:
+   - Descripción (math): El módulo `math` es una biblioteca estándar de Python que proporciona funciones matemáticas básicas.
+   - Utilidad (math): Se utiliza para realizar operaciones matemáticas, como funciones trigonométricas, logaritmos, etc.
+4. **`time`**:
+   - Descripción (time): El módulo `time` es una biblioteca estándar de Python que se utiliza para trabajar con operaciones relacionadas con el tiempo.
+   - Utilidad (time): Se utiliza para medir intervalos de tiempo, programar tareas, manejar fechas y horas, y otras operaciones relacionadas con el tiempo.
+
+5. **`tensorflow (tf)`**:
+   - Descripción: TensorFlow es una biblioteca de aprendizaje profundo (deep learning) desarrollada por Google. Proporciona herramientas y funciones para construir y entrenar modelos de aprendizaje profundo.
+   - Utilidad: Se utiliza para construir y entrenar modelos de redes neuronales, realizar inferencias en modelos preentrenados y realizar tareas de aprendizaje profundo en general.
+
+6. **`load_model de tensorflow.keras.models`**:
+   - Descripción: `load_model` es una función proporcionada por el módulo `tensorflow.keras.models` que se utiliza para cargar modelos de aprendizaje profundo previamente entrenados y almacenados en disco.
+   - Utilidad: Se utiliza para cargar modelos previamente entrenados y utilizarlos para realizar inferencias en nuevos datos sin tener que volver a entrenar el modelo.
+
+7. **`mediapipe (mp)`**:
+   - Descripción: MediaPipe es una biblioteca desarrollada por Google que proporciona soluciones de seguimiento y análisis de objetos del mundo real, como manos, rostros, posturas, etc.
+   - Utilidad: Se utiliza para rastrear y analizar objetos en tiempo real, lo que es especialmente útil en aplicaciones de realidad aumentada, interacción humano-computadora y más.
+
+8. **`serial`**:
+   - Descripción: La biblioteca `serial` se utiliza para la comunicación serial entre dispositivos, como la conexión con placas de desarrollo como Arduino.
+   - Utilidad: Se utiliza para establecer una comunicación bidireccional entre un ordenador y dispositivos externos mediante puertos seriales, permitiendo la transferencia de datos en tiempo real.
+
+9. **`paho-mqtt`**:
+   - Descripción: Paho MQTT es una biblioteca que implementa el protocolo MQTT (Message Queuing Telemetry Transport) para la comunicación entre dispositivos conectados a Internet de las Cosas (IoT).
+   - Utilidad: Se utiliza para establecer conexiones y enviar mensajes entre dispositivos a través del protocolo MQTT, lo que es esencial en aplicaciones de IoT para transmitir datos de manera eficiente y confiable.
+
+
+## Cargar el Modelo de Red Neuronal Convolucional (CNN)
+
+Para el reconocimiento de gestos, se puden utilizar modelos publicos, entrenar uno nuevo, o modificar modelos existentes. Pueden encontrar modelos en la [pagina official de Keras](https://tfhub.dev/). En este caso utilizare un modelo publico de Red Neuronal Convolucional ( o Convolutional Neural Network, CNN) para el reconocimiento de gestos de mano:
 
 ```python
-!pip install paho-mqtt openai
-import paho.mqtt.client as mqtt
-import openai
-import time
-import random
-from datetime import datetime
+# Recuerden cambiar la ubicacion de ejemplo.
+modelo = load_model('C:\\Usuario\\ubicacion\\del\\archivo\\codigo-reconocimiento-gestos-mano\\mp_gesto_mano')
 ```
 
-Esta sección instala los paquetes de Python necesarios utilizando `pip` e importa las bibliotecas necesarias para la comunicación MQTT, la integración con OpenAI y otras funcionalidades.
+- `load_model`: Una función de `tensorflow.keras.models` para cargar un modelo de red neuronal preentrenado.
+- El modelo se carga desde la ruta especificada, en mi caso: `'C:\\Users\\pjrio\\proyectos\\codigo-reconocimiento-gestos-mano\\mp_gesto_mano'`.
 
----
+## Cargar los Nombres de la Clase
 
-## Funciones de Callback MQTT
+Los nombres de clase para el modelo de reconocimiento de gestos se cargan en esta sección:
 
 ```python
-# Configuración de Callbacks MQTT
-def on_connect(client, userdata, flags, rc, properties=None):
-    print("CONNACK recibido con código %s." % rc)
-
-def on_publish(client, userdata, mid, properties=None):
-    print("cliente: " + str(client) + " userdata: " + str(userdata) + " mid: " + str(mid))
-
-def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-    print("Suscrito: " + str(mid) + " " + str(granted_qos))
-
-def on_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+# Recuerden cambiar la ubicacion de ejemplo.
+con open('C:\\Usuario\\ubicacion\\del\\archivo\\codigo-reconocimiento-gestos-mano\\gestos.names', 'r') as archivo:
+    nombres_clase = archivo.read().split('\n')
 ```
 
-Estas funciones definen el comportamiento de las devoluciones de llamada MQTT cuando ocurren eventos diferentes, como la conexión al broker, la publicación, la suscripción y la recepción de mensajes.
+- `nombres_clase` contiene una lista de nombres de clase que el modelo puede reconocer.
+- Los nombres de clase se leen desde la ruta de archivo especificada, en mi caso ser `'C:\\Users\\pjrio\\proyectos\\codigo-reconocimiento-gestos-mano\\gestos.names'`.
 
----
+## Inicialización de Mediapipe
 
-## Configuración MQTT
+Mediapipe se inicializa para el seguimiento y análisis de manos:
 
 ```python
-# Configuración de variables MQTT
-USUARIO = "pjriosc"
-CONTRASEÑA = "arduino-conexiones-101"
-DIRECCION = "4f2f4dcf13da4bd89f97a93716d25684.s2.eu.hivemq.cloud"
-
-# Inicializamos el cliente MQTT
-cliente = mqtt.Client(client_id="", userdata=None, protocol=mqtt.MQTTv5)
-cliente.on_connect = on_connect
-
-cliente.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
-cliente.username_pw_set(USUARIO, CONTRASEÑA)
-cliente.connect(DIRECCION, 8883)
-
-cliente.on_subscribe = on_subscribe
-cliente.on_message = on_message
-cliente.on_publish = on_publish
-
-cliente.subscribe("Arduino/MQTT", qos=1)
-cliente.loop_start()
+mp_dibujo = mp.solutions.drawing_utils
+mp_manos = mp.solutions.hands
 ```
 
-Esta sección configura los parámetros de conexión MQTT e inicializa el cliente MQTT con la configuración adecuada. También configura devoluciones de llamada MQTT para varios eventos y se suscribe a un tema específico.
+- `mp_dibujo` proporciona utilidades para dibujar en imágenes.
+- `mp_manos` contiene componentes para el seguimiento y análisis de manos.
 
----
+## Inicialización de la Cámara
 
-## Configuración e Inicialización de Datos del Sensor
+La cámara se inicializa para capturar video:
 
 ```python
-# Configuración (puedes cargar estos datos desde variables de entorno o un archivo de configuración)
-direccion_broker_mqtt = "mqtt.ejemplo.com"
-puerto_mqtt = 1883
-tema_mqtt = "sensor/datos"
-clave_api_openai = "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"
-umbral_temperatura = 2.0  # Umbral ajustable para el cambio de temperatura
-
-# Inicializar valores anteriores para la detección de cambios
-temperatura_anterior = 25.0
-humedad_anterior = 50.0
-
-# Inicializar datos simulados del sensor
-temperatura_simulada = 25.0
-humedad_simulada = 50.0
+cap = cv2.VideoCapture(0)
 ```
 
-Esta parte define los parámetros de configuración, incluidos los ajustes de MQTT, la clave de la API de OpenAI y el umbral de temperatura. También inicializa variables para almacenar datos anteriores del sensor y simula lecturas iniciales del sensor.
+- `cap`: Una instancia de `cv2.VideoCapture` para capturar video desde la cámara predeterminada (índice 0).
 
----
+## Variables
 
-## Configuración de la Clave de API de OpenAI
+Configuración de variables iniciales:
 
 ```python
-# Configurar tu clave de API de OpenAI
-openai.api_key = clave_api_openai
+enviar_comando = False
+ret = 'ninguno'
 ```
 
-Aquí, el código configura la clave de API de OpenAI para su uso posterior en la interacción con el modelo ChatGPT.
+- `enviar_comando`: Una bandera que indica si debe enviarse un comando.
+- `ret`: Una variable para almacenar una respuesta.
 
----
+# Bucle de captura de video
 
-## Gestión de Datos del Sensor
+En esta sección, se inicia un bucle para capturar video desde la cámara y procesar los frames para el reconocimiento de gestos de mano utilizando la biblioteca `mediapipe` y OpenCV:
 
 ```python
-# Inicializar una lista para almacenar lecturas del sensor con (temperatura, humedad, marca de tiempo)
-lecturas_del_sensor = []
+with mp_manos.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
+    while cap.isOpened():
+        ret, frame = cap.read()
 ```
 
-Esta sección inicializa una lista vacía para almacenar lecturas del sensor, cada una compuesta por temperatura, humedad y marca de tiempo.
+- `mp_manos.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands`: Inicializa el componente de detección y seguimiento de manos de Mediapipe con las confianzas mínimas especificadas.
+- `cap.isOpened()`: Verifica si la captura de video está en curso.
+- `ret`: Variable booleana que indica si el frame se capturó correctamente.
+- `frame`: El frame de video actual.
 
----
 
-## Función de Publicación de Datos del Sensor
+## Conversión de formato de color y volteo horizontal
+
+En esta sección, se realiza el preprocesamiento de la imagen del frame capturado:
 
 ```python
-# Definir una función para leer datos del sensor y agregarlos a la lista
-def publicar_datos_del_sensor():
-    global temperatura_anterior, humedad_anterior, temperatura_simulada, humedad_simulada, lecturas_del_sensor
-
-    # Simular datos del sensor aquí
-    # (La temperatura aumenta cada 1 segundo, la humedad disminuye cada 2 segundos)
-    
-    # Obtener la marca de tiempo actual
-
-    # Agregar los datos simulados a la lista con la marca de tiempo
-
-    # Publicar datos simulados a MQTT
-
-    # Comprobar cambios significativos y solicitar una explicación
+image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+image = cv2.flip(image, 1)
 ```
 
-Esta función simula datos del sensor, los agrega a la lista `lecturas_del_sensor`, los publica en MQTT y verifica cambios significativos en la temperatura y la humedad.
+- `cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)`: Convierte el formato de color de BGR a RGB.
+- `cv2.flip(image, 1)`: Voltea horizontalmente la imagen para visualización natural.
 
----
+## Configuración de la bandera de escritura
 
-## Detección de Cambios y Solicitud de Explicación
+En esta parte, se configura la bandera de escritura de la imagen para garantizar que no se modifiquen los datos:
 
 ```python
-# Definir una función para verificar cambios significativos y solicitar una explicación a ChatGPT
-def verificar_cambios(nueva_temperatura, nueva_humedad):
-    global temperatura_anterior, humedad_anterior
-
-    # Ejemplo: si la temperatura aumentó más que el umbral
-    
-    # Actualizar los valores anteriores para la próxima comprobación
+image.flags.writeable = False
 ```
 
-Esta función verifica si hay un cambio significativo en la temperatura y la humedad en comparación con las lecturas anteriores. Si hay un cambio significativo, solicita una explicación a ChatGPT.
+- `image.flags.writeable = False`: Configura la imagen como no escribible.
+- `image.flags.writeable = True`: Configura la imagen nuevamente como escribible.
 
----
+## Detección de manos
 
-## Interacción con ChatGPT
+Aquí, se procesa la imagen para detectar las manos utilizando el componente `Hands` de Mediapipe:
 
 ```python
-# Definir una función para interactuar con ChatGPT
-def charlar_con_gpt(prompt):
-    respuesta = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=prompt,
-        max_tokens=50  # Ajustar según sea necesario
-    )
-    return respuesta.choices[0].text
+results = hands.process(image)
 ```
 
-Esta función interactúa con ChatGPT utilizando la API de OpenAI, proporcionando un estímulo y recibiendo una respuesta.
+- `hands.process(image)`: Procesa la imagen para detectar y rastrear las manos.
 
----
 
-## Bucle Principal
+## Conversión de formato de color
+
+Aquí, se convierte la imagen de nuevo al formato BGR para poder trabajar con las funciones de dibujo de OpenCV:
 
 ```python
-# Conéctate al broker MQTT y comienza el bucle de monitoreo
-cliente.connect("4f2f4dcf13da4bd89f97a93716d25684.s2.eu.hivemq.cloud", 8883)
-cliente.loop_start()
-segundos = 0
+image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+```
 
-# Bucle principal para publicar datos del sensor
-try:
-    while True:
-        # Recopilar datos del sensor y enviarlos a ChatGPT cada 1
+- `cv2.cvtColor(image, cv2.COLOR_RGB2BGR)`: Convierte la imagen de RGB a BGR.
+
+## Conteo de dedos y detección de gestos
+
+En esta sección, se analizan los resultados de la detección de manos para contar dedos y detectar gestos:
+
+```python
+if results.multi_hand_landmarks:
+    for hand_landmarks in results.multi_hand_landmarks:
+        # Mediciones de distancias entre puntos clave
+        # Cálculos para contar dedos abiertos
+        # Dibujo de landmarks en la imagen
+        # Predicción de gestos basada en landmarks
+```
+
+- `results.multi_hand_landmarks`: Verifica si se detectaron manos en el frame.
+- `hand_landmarks`: Puntos clave (landmarks) detectados en la mano.
+
+
+
+## Mostrar información en la imagen
+
+Aquí, se agrega información al frame visualizado, como el conteo de dedos y la detección de gestos:
+
+```python
+font = cv2.FONT_HERSHEY_SIMPLEX
+cv2.putText(image, f'Conteo de Dedos: {finger_count}', (10, 30), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+cv2.putText(image, f'Gesto: {gesture}', (10, 70), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+cv2.putText(image, f'Enviar Habilitado: {send_cmd} && Enviado {sent}', (10, 100), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+```
+
+- `cv2.putText(image, text, (x, y), font, scale, color, thickness, cv2.LINE_AA)`: Agrega texto al frame visualizado.
+- `text`: El texto a mostrar.
+- `(x, y)`: Posición del texto en el frame.
+- `font`: Fuente del texto.
+- `scale`: Escala del texto.
+- `color`: Color del texto.
+- `thickness`: Grosor del texto.
+- `cv2.LINE_AA`: Tipo de antialiasing para el texto.
+
+## Mostrar el frame de salida
+
+Finalmente, se muestra el frame procesado con la información y los resultados:
+
+```python
+cv2.imshow('Seguimiento de Mano y Reconocimiento de Gesto', image)
+```
+
+- `cv2.imshow(window_name, image)`: Muestra la imagen en una ventana con el nombre especificado.
+
+## Romper el bucle y liberar recursos
+
+Al final, el bucle se rompe si se presiona la tecla 'q', y se liberan los recursos de la cámara y las ventanas:
+
+```python
+if cv2.waitKey(10) & 0xFF == ord('q'):
+    break
+
+cap.release()
+cv2.destroyAllWindows()
+```
+
+- `cv2.waitKey(delay)`: Espera una tecla presionada durante el tiempo especificado en milisegundos.
+- `ord('q')`: Valor numérico de la tecla 'q'.
+- `cap.release()`: Libera los recursos de la cámara.
+- `cv2.destroyAllWindows()`: Cierra todas las ventanas abiertas.
