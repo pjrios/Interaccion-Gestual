@@ -29,7 +29,7 @@ client.connect(mqtt_server, mqtt_port)
 
 # Load the YOLOv8 model
 model = YOLO('yolov8n-seg.pt')
-model2 = YOLO('yolov8n-pose.pt')
+
 
 # Open the video file
 cap = cv2.VideoCapture(0)
