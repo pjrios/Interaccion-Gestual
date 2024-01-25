@@ -1,13 +1,10 @@
-# Instala la biblioteca paho-mqtt si no está instalada.
-# Si estás utilizando Jupyter Notebook o Google Colab, puedes ejecutar esto en una celda.
-# Si estás ejecutando este código en tu entorno local, asegúrate de tener la biblioteca instalada.
-
 import paho.mqtt.client as paho
 from paho import mqtt
 
 # Configuración de MQTT
-USUARIO   = "pjriosc"
-CONTRASEÑA = "arduino-conexiones-101"
+USUARIO   = "seminario-IoT2024"
+CONTRASEÑA = "seminario-IoT2024"
+PATH = "93fd2fab7309499aa37f1731f5d26a2a.s1.eu.hivemq.cloud"
 
 # Define callbacks para diferentes eventos para ver si funcionan, imprimir el mensaje, etc.
 def al_conectar(cliente, userdata, flags, rc, properties=None):
@@ -24,17 +21,17 @@ def al_suscribir(cliente, userdata, mid, granted_qos, properties=None):
 # Imprime el mensaje, útil para verificar si fue exitoso
 def al_recibir_mensaje(cliente, userdata, mensaje):
    print(mensaje.topic + " " + str(mensaje.qos) + " " + str(mensaje.payload))
-   mensaje_decodificado = (mensaje.payload).decode() 
+   mensaje_decodificado = (mensaje.payload).decode()
 
-   if mensaje_decodificado == "start":
+   if mensaje_decodificado == "iniciar":
       comenzar()
    elif mensaje_decodificado == "detener":
       detener()
 
-def comenzar(): 
+def comenzar():
     print("Comenzando el programa")
 
-def detener(): 
+def detener():
     print("Deteniendo el programa")
 
 # Utilizando MQTT versión 5 aquí, para 3.1.1: MQTTv311, 3.1: MQTTv31
@@ -48,7 +45,7 @@ cliente.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
 # Establecer nombre de usuario y contraseña
 cliente.username_pw_set(USUARIO, CONTRASEÑA)
 # Conectar a HiveMQ Cloud en el puerto 8883 (predeterminado para MQTT)
-cliente.connect("4f2f4dcf13da4bd89f97a93716d25684.s2.eu.hivemq.cloud", 8883)
+cliente.connect(PATH, 8883)
 
 # Configurar callbacks, utiliza funciones separadas como se muestra arriba para una mejor visibilidad
 cliente.on_subscribe = al_suscribir
@@ -56,13 +53,6 @@ cliente.on_message = al_recibir_mensaje
 cliente.on_publish = al_publicar
 
 # Suscribirse a todos los temas de "Arduino/MQTT" utilizando el comodín "#"
-cliente.subscribe("Arduino/MQTT", qos=1)
-i = 0
-seguir = True
-cliente.loop_start()
-while seguir:
-    if i < 90000:
-        i += 1
-    else:
-        seguir = False
-cliente.loop_stop()
+cliente.subscribe("ROCK3A/MQTT", qos=1)
+
+cliente.loop_forever()
